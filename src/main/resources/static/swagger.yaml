@@ -1,0 +1,416 @@
+swagger: '2.0'
+info:
+  description: |-
+    API para administrar las ventas de los clientes y productos
+  version: v1.0
+  title: API RESTFUL VENTAS - EVAL. BACKEND
+  contact:
+    name: Juan Escurra
+    url: https://github.com/JuanEscurra
+    email: j.escurra.1999@gmail.com
+  license:
+    name: License of API
+    url: API license URL
+host: localhost:8080
+basePath: "/"
+tags:
+  - name: Ventas
+    description: Conjunto de operaciones para consultar y modificar entidades referentes a la venta
+  - name: Clientes
+    description: Conjunto de operaciones para consultar y modificar entidades referentes a la cliente
+  - name: Productos
+    description: Conjunto de operaciones para administrar objetos productos
+paths:
+  "/ventas":
+    get:
+      tags:
+        - Ventas
+      summary: Lista las ventas con paginado y filtrado con rango por fechas
+      operationId: obtenerVentas
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          description: Numero de la pagina
+          default: 0
+          type: integer
+          format: int64
+        - in: query
+          name: size
+          description: Numero de elementos por pagina
+          default: 20
+          type: integer
+          format: int64
+        - in: query
+          name: dateStart
+          type: string
+          format: date
+          description: Inicio del rango de fecha
+        - in: query
+          name: dateEnd
+          type: string
+          format: date
+          description: Final del rango de fecha
+      responses:
+        '200':
+          description: La petición se ha realizado con éxito
+          schema:
+            type: object
+            properties:
+              content:
+                type: array
+                items:
+                  $ref: '#/definitions/Venta'
+              totalElements:
+                type: integer
+                description: cantidad total de elementos existentes
+              totalPages:
+                type: integer
+                description: cantidad de paginas de la busqueda
+              size:
+                type: integer
+                description: cantidad de elementos por pagina
+              number:
+                type: integer
+                description: numero de la pagina solicitada
+              numberOfElements:
+                type: integer
+                description: numero de elementos en la pagina actual
+              empty:
+                type: boolean
+                description: ¿La página actual no tien elementos?
+        '204':
+          description: La petición ha sido entendida, pero no hay elementos que devolver.
+          schema:
+            type: null
+    post:
+      tags:
+        - Ventas
+      summary: Guarda una venta
+      operationId: eliminarVenta
+      parameters:
+        - in: body
+          name: venta
+          schema:
+            $ref: "#/definitions/Venta"
+          description: Información de venta que se desea guardar
+      responses:
+        '201':
+          description: Se ha guardado la información de la venta
+          schema:
+            "$ref": "#/definitions/Venta"
+        '204':
+          description: Se ha entendido la petición, pero no se pudo guardar porque no cumple con los datos solicitados
+      deprecated: false
+  "/ventas/{id}":
+    get:
+      tags:
+        - Ventas
+      summary: Busca una venta por id ingresado en el path
+      operationId: obtenerVenta
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/Venta"
+        '204':
+          description: La petición http se recibio, pero no hay resultado para la busqueda
+      deprecated: false
+
+  "/clientes":
+    get:
+      tags:
+        - Clientes
+      summary: Listar los clientes por pagina
+      operationId: obtenerClientes
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          description: Numero de la pagina
+          default: 0
+          type: integer
+          format: int64
+        - in: query
+          name: size
+          description: Numero de elementos por pagina
+          default: 20
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: La petición se ha realizado con éxito
+          schema:
+            type: object
+            properties:
+              content:
+                type: array
+                items:
+                  $ref: '#/definitions/Cliente'
+              totalElements:
+                type: integer
+                description: cantidad total de elementos existentes
+              totalPages:
+                type: integer
+                description: cantidad de paginas de la busqueda
+              size:
+                type: integer
+                description: cantidad de elementos por pagina
+              number:
+                type: integer
+                description: numero de la pagina solicitada
+              numberOfElements:
+                type: integer
+                description: numero de elementos en la pagina actual
+              empty:
+                type: boolean
+                description: ¿La página actual no tien elementos?
+        '204':
+          description: La petición ha sido entendida, pero no hay elementos que devolver.
+          schema:
+            type: null
+    post:
+      tags:
+        - Clientes
+      summary: Guarda cliente
+      operationId: save
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: cliente
+          schema:
+            $ref: "#/definitions/Cliente"
+          description: Información del cliente que se desea guardar
+      responses:
+        '201':
+          description: Se ha guardado la información del cliente
+          schema:
+            "$ref": "#/definitions/Cliente"
+        '204':
+          description: Se ha entendido la petición, pero no se pudo guardar porque no cumple con los datos solicitados
+      deprecated: false
+
+
+  "/productos":
+    get:
+      tags:
+        - Productos
+      summary: Listar los productos por pagina
+      operationId: obtenerProducto
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          description: Numero de la pagina
+          default: 0
+          type: integer
+          format: int64
+        - in: query
+          name: size
+          description: Numero de elementos por pagina
+          default: 20
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: La petición se ha realizado con éxito
+          schema:
+            type: object
+            properties:
+              content:
+                type: array
+                items:
+                  $ref: '#/definitions/Producto'
+              totalElements:
+                type: integer
+                description: cantidad total de elementos existentes
+              totalPages:
+                type: integer
+                description: cantidad de paginas de la busqueda
+              size:
+                type: integer
+                description: cantidad de elementos por pagina
+              number:
+                type: integer
+                description: numero de la pagina solicitada
+              numberOfElements:
+                type: integer
+                description: numero de elementos en la pagina actual
+              empty:
+                type: boolean
+                description: ¿La página actual no tien elementos?
+        '204':
+          description: La petición ha sido entendida, pero no hay elementos que devolver.
+          schema:
+            type: null
+    post:
+      tags:
+        - Productos
+      summary: Guarda Producto
+      operationId: guardarProducto
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: producto
+          schema:
+            $ref: "#/definitions/Producto"
+          description: Información del producto que se desea guardar
+      responses:
+        '201':
+          description: Se ha guardado la información del producto
+          schema:
+            "$ref": "#/definitions/Producto"
+        '204':
+          description: Se ha entendido la petición, pero no se pudo guardar porque no cumple con los datos solicitados
+      deprecated: false
+    put:
+      tags:
+        - Productos
+      summary: Actualizar un producto
+      operationId: actualizarProducto
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: producto
+          schema:
+            $ref: "#/definitions/Producto"
+          description: Información del producto que se desea guardar
+      responses:
+        '200':
+          description: Se ha actualizado el producto
+          schema:
+            $ref: "#/definitions/Producto"
+        '204':
+          description: La petición se recibio, pero no hay resultado
+      deprecated: false
+  "/productos/{id}":
+    delete:
+      tags:
+        - Productos
+      summary: Eliminar una producto por id ingresado
+      operationId: eliminarProducto
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Se ha eliminado el producto
+        '204':
+          description: La petición http se recibio, pero no hay resultado para la busqueda
+      deprecated: false
+
+definitions:
+  Producto:
+    type: object
+    required:
+      - nombre
+      - precio
+    properties:
+      id:
+        type: number
+        description: Identificador unico de un producto
+      nombre:
+        type: string
+        uniqueItems: true
+        description: Nombre del producto
+      precio:
+        type: number
+        multipleOf: 0.01
+        description: Precio del producto
+        example: 20.40
+  Cliente:
+    type: object
+    required:
+      - nombres
+      - apellidos
+      - dni
+    properties:
+      id:
+        type: number
+        description: Identificador unico de un cliente
+      nombres:
+        type: string
+        description: Primer y Segundo nombre del cliente
+        example: Maxine Gerretsen
+      apellidos:
+        type: string
+        description: Primer y segundo apellido del cliente
+        example: Vanda Peasee
+      dni:
+        type: string
+        description: Numero de DNI del cliente
+        format: XXXXXXXX
+        example: "74112365"
+      telefono:
+        type: string
+        description: Numero telefonico del cliente
+        format: XXXXXXXXX
+        example: 987412563
+      email:
+        type: string
+        description: Correo electronico del cliente
+        format: email
+        example: vpeasee1@nyu.edu
+  Venta:
+    type: object
+    required:
+      - cliente
+      - fecha
+    properties:
+      id:
+        type: number
+        description: Identificador unico de la venta
+      fecha:
+        type: string
+        format: date
+        description: Fecha de la realización de la venta
+      detallesVenta:
+        type: array
+        items:
+          "$ref": "#/definitions/DetalleVenta"
+      cliente:
+        type: object
+        "$ref": '#/definitions/Cliente'
+  DetalleVenta:
+    type: object
+    required:
+      - producto
+      - cantidad
+    properties:
+      id:
+        type: number
+        description: Identificador unico del detalle de la venta
+      producto:
+        type: object
+        "$ref": "#/definitions/Producto"
+        description: Producto comprado
+      cantidad:
+        type: number
+        format: int64
+        description: Cantidad comprada de dicho producto
+        minimum: 1
+
+
+
+
